@@ -72,8 +72,8 @@ end
 
 -- get the line number in the buffer
 function M.get_line_number_from_buf()
-  local lineNum = vim.api.nvim__buf_stats(0).current_lnum
-  return lineNum
+  local line, _col = unpack(vim.api.nvim_win_get_cursor(0))
+  return line
 end
 
 -- opens a url in the correct OS
