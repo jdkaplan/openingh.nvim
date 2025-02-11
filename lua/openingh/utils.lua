@@ -64,7 +64,15 @@ function M.get_default_branch()
   -- will return origin/[branch_name]
   local remote = M.get_default_remote()
   local branch_with_origin = vim.fn.system("git rev-parse --abbrev-ref " .. remote .. "/HEAD")
-  local branch_name = M.split(branch_with_origin, "/")[2]
+
+  -- Remove the remote prefix (likely "origin/") from the branch name. This
+  -- avoids issues with splitting when the branch name contains a slash in it
+  -- already.
+  --
+  -- For example, "origin/trunk/production" should become "trunk/production".
+  --
+  -- (+1 for 1-indexing, +1 for the "/" itself)
+  local branch_name = branch_with_origin:sub(remote:len() + 2)
 
   return M.trim(branch_name)
 end
